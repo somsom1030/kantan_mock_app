@@ -17,13 +17,37 @@ class _MenuDrawerState extends State<MenuDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(child: SafeArea(
-      child: Tap(
-        onTap: () {
-          closeDrawer(context);
-        },
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text("miroku"),
+            accountEmail: Text("miroku@mjs.co.jp"),
+            onDetailsPressed: () {
+              print("on details pressed");
+            },
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 91, 150, 250), // 배경색 변경
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text("홈"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text("설정"),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
-    ));
+    );
   }
 
   void closeDrawer(BuildContext context) {

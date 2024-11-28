@@ -14,7 +14,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return Container(
       height: CustomAppBar.appBarHeight,
-      color: const Color.fromARGB(255, 216, 216, 216),
+      color: const Color.fromARGB(255, 48, 162, 255),
       child: Row(
         children: [
           width10,
@@ -35,8 +35,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   child: Align(
                 alignment: Alignment.topRight,
                 child: Container(
-                  width: 8,
-                  height: 8,
+                  width: 10,
+                  height: 10,
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.red),
                 ),

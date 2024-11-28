@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:kantan_mock_app/screen/main/file_box/f_file_box.dart';
+import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/photo_provider.dart';
 import 'package:kantan_mock_app/screen/main/menu/f_menu.dart';
 import 'package:kantan_mock_app/screen/main/search/f_search.dart';
+import 'package:kantan_mock_app/screen/main/w_menu_drawer.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PhotoProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +34,7 @@ class BottomNavExample extends StatefulWidget {
 }
 
 class _BottomNavExampleState extends State<BottomNavExample> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final List<Widget> _pages = [
     const MenuFragment(),
@@ -40,27 +50,29 @@ class _BottomNavExampleState extends State<BottomNavExample> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Bottom Navigation Example')),
-      drawer: const MenuDrawer(),
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+    return SafeArea(
+      child: Scaffold(
+        appBar: null,
+        drawer: const MenuDrawer(),
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
