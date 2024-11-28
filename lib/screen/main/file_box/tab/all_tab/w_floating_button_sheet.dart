@@ -42,11 +42,12 @@ class FloatingButtonSheetWidget extends StatelessWidget {
   Future<void> _pickImage(BuildContext context) async {
     final ImagePicker _picker = ImagePicker();
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        Provider.of<PhotoProvider>(context, listen: false)
-            .addPhoto(File(image.path));
-        Navigator.pop(context);
+      final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+      if (pickedFiles != null) {
+        // 선택된 이미지를 PhotoProvider에 추가
+        List<File> files = pickedFiles.map((file) => File(file.path)).toList();
+        Provider.of<PhotoProvider>(context, listen: false).addPhotos(files);
+        Navigator.pop(context); // 선택 후 화면 닫기
       }
     } catch (e) {
       print("error: $e");

@@ -1,6 +1,15 @@
+import 'dart:io';
+
 class AllFile {
-  final String fileName;
+  final File filePath; // 이미지 파일
+  final String fileName; // 이미지 이름
+  final DateTime date; // 이미지 날짜
   final bool isFile;
 
-  AllFile({required this.fileName, required this.isFile});
+  AllFile({
+    required this.filePath,
+    required this.fileName,
+    required this.date,
+    required this.isFile,
+  });
 }

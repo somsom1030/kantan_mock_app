@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kantan_mock_app/common/widget/w_height_and_width.dart';
 
 class CustomAppBar extends StatefulWidget {
   static const double appBarHeight = 60;
@@ -14,42 +13,66 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return Container(
       height: CustomAppBar.appBarHeight,
-      color: const Color.fromARGB(255, 48, 162, 255),
-      child: Row(
+      color: Colors.white,
+      child: Stack(
         children: [
-          width10,
-          IconButton(
+          // 메뉴 드로어 버튼
+          Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
                 openDrawer(context);
-              }),
-          Expanded(child: Container()),
-          Stack(
-            children: [
-              IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () {
-                    print('click Notifications');
-                  }),
-              Positioned.fill(
-                  child: Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.red),
-                ),
-              ))
-            ],
+              },
+            ),
           ),
-          width10,
-          IconButton(
-              icon: const Icon(Icons.more_horiz),
-              onPressed: () {
-                print('click more_horiz');
-              }),
-          width10
+          // 이미지 (가운데 정렬)
+          Center(
+            child: Image.asset(
+              'assets/images/title.jpg',
+              width: 100,
+              height: 50,
+              fit: BoxFit.contain,
+            ),
+          ),
+          // 알림 및 더보기 아이콘
+          Align(
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  children: [
+                    IconButton(
+                      icon:
+                          const Icon(Icons.notifications, color: Colors.black),
+                      onPressed: () {
+                        print('click notifications');
+                      },
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () {
+                    print("click more_vert");
+                  },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

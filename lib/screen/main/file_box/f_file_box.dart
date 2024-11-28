@@ -28,6 +28,7 @@ class _FileBoxFragmentState extends State<FileBoxFragment>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: Column(
         children: [
           const CustomAppBar(),
