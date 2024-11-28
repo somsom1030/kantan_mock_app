@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/f_upload_file.dart';
 import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/photo_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -48,6 +49,10 @@ class FloatingButtonSheetWidget extends StatelessWidget {
         List<File> files = pickedFiles.map((file) => File(file.path)).toList();
         Provider.of<PhotoProvider>(context, listen: false).addPhotos(files);
         Navigator.pop(context); // 선택 후 화면 닫기
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UploadFragment()),
+        );
       }
     } catch (e) {
       print("error: $e");

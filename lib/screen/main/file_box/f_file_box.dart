@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kantan_mock_app/common/widget/w_line.dart';
 import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/f_all_file.dart';
-import 'package:kantan_mock_app/screen/main/file_box/tab/f_recently_file.dart';
-import 'package:kantan_mock_app/screen/main/file_box/tab/f_trash_file.dart';
+import 'package:kantan_mock_app/screen/main/file_box/tab/recently_tab/f_recently_file.dart';
+import 'package:kantan_mock_app/screen/main/file_box/tab/trash_tab/f_trash_file.dart';
 import 'package:kantan_mock_app/screen/main/file_box/w_custom_app_bar.dart';
 import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/w_floating_button_sheet.dart';
 import 'package:velocity_x/velocity_x.dart';

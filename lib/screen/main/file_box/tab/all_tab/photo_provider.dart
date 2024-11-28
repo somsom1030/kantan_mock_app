@@ -23,7 +23,7 @@ class PhotoProvider with ChangeNotifier {
         isFile: true,
       ));
     }
-
+    print('Photo List Count: ${_photoList.length}'); // 리스트 상태 출력
     notifyListeners(); // 상태 변화 알리기
   }
 
@@ -39,6 +39,27 @@ class PhotoProvider with ChangeNotifier {
       isFile: true,
     ));
     notifyListeners(); // 리스트 변경 시 UI 업데이트
+  }
+
+  // 사진 한 장 수정하는 메서드
+  void updatePhoto(int index, File newFile) {
+    // 업데이트할 사진의 기존 객체 가져오기
+    AllFile updatedPhoto = _photoList[index];
+
+    // 새로운 파일로 수정하기 (파일 경로와 이름 갱신)
+    String newFileName = _generateFileName();
+    DateTime newFileDate = newFile.lastModifiedSync();
+
+    // 수정된 정보를 반영하여 새로운 AllFile 객체로 업데이트
+    _photoList[index] = AllFile(
+      filePath: newFile,
+      fileName: newFileName,
+      date: newFileDate,
+      isFile: true,
+    );
+
+    notifyListeners(); // 리스트 변경 시 UI 업데이트
+    print('Updated Photo at index $index');
   }
 
   // 사진 리스트를 초기화하는 메서드 (필요시 사용)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kantan_mock_app/screen/main/file_box/alarm/f_alarm.dart';
 
 class CustomAppBar extends StatefulWidget {
   static const double appBarHeight = 60;
@@ -47,7 +48,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       icon:
                           const Icon(Icons.notifications, color: Colors.black),
                       onPressed: () {
-                        print('click notifications');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AlarmFragment()),
+                        );
                       },
                     ),
                     Positioned(
