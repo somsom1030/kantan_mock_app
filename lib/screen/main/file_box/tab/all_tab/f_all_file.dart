@@ -19,105 +19,114 @@ class _AllFragmentState extends State<AllFragment> {
   Widget build(BuildContext context) {
     final photoList = Provider.of<PhotoProvider>(context).photoList;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-          child: 'ファイルBOX'.text.size(18).bold.make(),
-        ),
-        sortBox(context),
-        // Padding을 ListView나 GridView 외부에 적용
-        Padding(
-          padding:
-              const EdgeInsets.all(16.0), // Padding을 ListView와 GridView 외부에 적용
-          child: _isGridView
-              ? GridView.builder(
-                  shrinkWrap: true, // GridView가 자동으로 크기를 조정하도록
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // 한 줄에 2개씩
-                    crossAxisSpacing: 12.0,
-                    mainAxisSpacing: 12.0,
-                    childAspectRatio: 1.0, // 정사각형 비율
-                  ),
-                  itemCount: photoList.length,
-                  itemBuilder: (context, index) {
-                    final photo = photoList[index];
-                    final photoFile = photo.filePath;
-                    final photoName = photo.fileName;
-                    final photoDate = photo.date;
-                    final isFile = photo.isFile;
+    return SingleChildScrollView(
+      // 전체 화면 스크롤을 가능하게 함
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            child: 'ファイルBOX'.text.size(18).bold.make(),
+          ),
+          sortBox(context),
+          Padding(
+            padding: const EdgeInsets.all(
+                16.0), // Padding을 ListView와 GridView 외부에 적용
+            child: _isGridView
+                ? GridView.builder(
+                    shrinkWrap: true, // GridView 크기 자동 조정
+                    physics:
+                        const NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // 한 줄에 2개씩
+                      crossAxisSpacing: 12.0,
+                      mainAxisSpacing: 12.0,
+                      childAspectRatio: 1.0, // 정사각형 비율
+                    ),
+                    itemCount: photoList.length,
+                    itemBuilder: (context, index) {
+                      final photo = photoList[index];
+                      final photoFile = photo.filePath;
+                      final photoName = photo.fileName;
+                      final photoDate = photo.date;
+                      final isFile = photo.isFile;
 
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.file(
+                                photoFile,
+                                fit: BoxFit.cover, // 이미지를 뷰에 맞게 잘라서 채우기
+                                width: double.maxFinite, // 가로는 부모 크기에 맞추기
+                                height: 130, // 이미지 세로 크기 고정
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              photoName,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              '${photoDate.year}-${photoDate.month}-${photoDate.day}', // 날짜 표시
+                              style: const TextStyle(
+                                  fontSize: 10, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                : ListView.builder(
+                    shrinkWrap: true, // ListView 크기 자동 조정
+                    physics:
+                        const NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
+                    itemCount: photoList.length,
+                    itemBuilder: (context, index) {
+                      final photo = photoList[index];
+                      final photoName = photo.fileName;
+                      final photoDate = photo.date;
+                      final isFile = photo.isFile;
+
+                      return Row(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.file(
-                              photoFile,
-                              fit: BoxFit.cover, // 이미지를 뷰에 맞게 잘라서 채우기
-                              width: double.maxFinite, // 가로는 부모 크기에 맞추기
-                              height: 130, // 이미지 세로 크기 고정
+                          isFile
+                              ? const Icon(Icons.image)
+                              : const Icon(Icons.file_copy),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  photoName,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '${photoDate.year}-${photoDate.month}-${photoDate.day}',
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            photoName,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                          Text(
-                            '${photoDate.year}-${photoDate.month}-${photoDate.day}', // 날짜 표시
-                            style: const TextStyle(
-                                fontSize: 10, color: Colors.grey),
-                          ),
+                          const Icon(Icons.more_horiz),
                         ],
-                      ),
-                    );
-                  },
-                )
-              : ListView.builder(
-                  shrinkWrap: true, // ListView가 자동으로 크기를 조정하도록
-                  itemCount: photoList.length,
-                  itemBuilder: (context, index) {
-                    final photo = photoList[index];
-                    final photoName = photo.fileName;
-                    final photoDate = photo.date;
-                    final isFile = photo.isFile;
-
-                    return Row(
-                      children: [
-                        isFile
-                            ? const Icon(Icons.image)
-                            : const Icon(Icons.file_copy),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                photoName,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                '${photoDate.year}-${photoDate.month}-${photoDate.day}',
-                                style: const TextStyle(
-                                    fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.more_horiz),
-                      ],
-                    );
-                  },
-                ),
-        ),
-      ],
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
     );
   }
 

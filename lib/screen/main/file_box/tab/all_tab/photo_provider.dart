@@ -4,15 +4,15 @@ import 'package:intl/intl.dart';
 import 'package:kantan_mock_app/screen/main/file_box/vo/vo_all_file_data.dart'; // 날짜 및 시간 포맷을 위한 패키지
 
 class PhotoProvider with ChangeNotifier {
-  // 선택된 사진과 해당 이름을 저장할 리스트
   List<AllFile> _photoList = [];
-
   List<AllFile> get photoList => _photoList;
+
+  List<AllFile> _uploadList = [];
+  List<AllFile> get uploadList => _uploadList;
 
   // 사진과 이름을 추가하는 함수
   void addPhotos(List<File> files) {
     for (var file in files) {
-// 현재 날짜와 시간을 "yyyyMMdd_HHmmss" 형식으로 생성
       String fileName = _generateFileName();
       DateTime fileDate = file.lastModifiedSync();
       // Photo 객체 생성 후 리스트에 추가
@@ -26,6 +26,22 @@ class PhotoProvider with ChangeNotifier {
     print('Photo List Count: ${_photoList.length}'); // 리스트 상태 출력
     notifyListeners(); // 상태 변화 알리기
   }
+
+  // void add(List<File> files) {
+  //   for (var file in files) {
+  //     String fileName = _generateFileName();
+  //     DateTime fileDate = file.lastModifiedSync();
+  //     // Photo 객체 생성 후 리스트에 추가
+  //     _photoList.add(AllFile(
+  //       filePath: file,
+  //       fileName: fileName,
+  //       date: fileDate,
+  //       isFile: true,
+  //     ));
+  //   }
+  //   print('Photo List Count: ${_photoList.length}'); // 리스트 상태 출력
+  //   notifyListeners(); // 상태 변화 알리기
+  // }
 
   // 하나의 이미지를 추가하는 메서드
   void addPhoto(File file) {
@@ -43,7 +59,6 @@ class PhotoProvider with ChangeNotifier {
 
   // 사진 한 장 수정하는 메서드
   void updatePhoto(int index, File newFile) {
-    // 업데이트할 사진의 기존 객체 가져오기
     AllFile updatedPhoto = _photoList[index];
 
     // 새로운 파일로 수정하기 (파일 경로와 이름 갱신)

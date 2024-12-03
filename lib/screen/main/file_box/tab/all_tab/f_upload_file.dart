@@ -18,6 +18,15 @@ class UploadFragment extends StatefulWidget {
 class _UploadFragmentState extends State<UploadFragment> {
   // ScrollController를 추가하여 스크롤 상태를 관리합니다.
   final ScrollController _scrollController = ScrollController();
+  late List<bool> isCheckedList;
+
+  @override
+  void initState() {
+    super.initState();
+    final photoList =
+        Provider.of<PhotoProvider>(context, listen: false).photoList;
+    isCheckedList = List<bool>.filled(photoList.length, false); // 초기화
+  }
 
   @override
   void dispose() {
@@ -148,6 +157,19 @@ class _UploadFragmentState extends State<UploadFragment> {
                                         },
                                       ),
                                     ),
+                                    Positioned(
+                                      left: 0,
+                                      top: 0,
+                                      child: Checkbox(
+                                        value: isCheckedList[index],
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isCheckedList[index] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
@@ -166,10 +188,20 @@ class _UploadFragmentState extends State<UploadFragment> {
             child: Center(
               child: ElevatedButton(
                 onPressed: () {
-                  final newPhotos = List<File>.from(
-                      photoList.map((allFile) => allFile.filePath));
+                  // 선택된 사진만 필터링
+                  final selectedPhotos = photoList
+                      .asMap()
+                      .entries
+                      .where((entry) => isCheckedList[entry.key])
+                      .map((entry) => entry.value.filePath)
+                      .toList();
+
+                  print('selectedPhotos: $selectedPhotos');
+
+                  // PhotoProvider에 선택된 사진을 추가
                   Provider.of<PhotoProvider>(context, listen: false)
-                      .addPhotos(newPhotos);
+                      .addPhotos(selectedPhotos);
+
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
