@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kantan_mock_app/common/utility/upload_file_check.dart';
 import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/f_all_file.dart';
 import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/photo_provider.dart';
 import 'package:kantan_mock_app/screen/main/file_box/vo/vo_all_file_data.dart';
@@ -23,9 +24,9 @@ class _UploadFragmentState extends State<UploadFragment> {
   @override
   void initState() {
     super.initState();
-    final photoList =
-        Provider.of<PhotoProvider>(context, listen: false).photoList;
-    isCheckedList = List<bool>.filled(photoList.length, false); // 초기화
+    final uploadList =
+        Provider.of<PhotoProvider>(context, listen: false).uploadList;
+    isCheckedList = List<bool>.filled(uploadList.length, false); // 초기화
   }
 
   @override
@@ -37,7 +38,8 @@ class _UploadFragmentState extends State<UploadFragment> {
 
   @override
   Widget build(BuildContext context) {
-    final photoList = Provider.of<PhotoProvider>(context).photoList;
+    print("isCheckedList111 : ${isCheckedList.length}");
+    final uploadList = Provider.of<PhotoProvider>(context).uploadList;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
@@ -51,14 +53,14 @@ class _UploadFragmentState extends State<UploadFragment> {
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.symmetric(
                     vertical: 10.0, horizontal: 20.0),
-                child: '選択項目数 : ${photoList.length}'
+                child: '選択項目数 : ${isCheckedList.length}'
                     .text
                     .size(10)
                     .color(Colors.grey)
                     .make(),
               ),
               Expanded(
-                child: photoList.isEmpty
+                child: uploadList.isEmpty
                     ? const Center(
                         child: Text('No photos available.')) // 비어 있을 때 메시지 표시
                     : Scrollbar(
@@ -77,12 +79,14 @@ class _UploadFragmentState extends State<UploadFragment> {
                               mainAxisSpacing: 12.0,
                               childAspectRatio: 1.0, // 정사각형 비율
                             ),
-                            itemCount: photoList.length,
+                            itemCount: uploadList.length,
                             itemBuilder: (context, index) {
-                              final photo = photoList[index];
+                              final photo = uploadList[index];
                               final photoFile = photo.filePath;
                               final photoName = photo.fileName;
                               final photoDate = photo.date;
+                              final photoType = photo.isFile;
+                              print("photo.isFile : ${photo.isFile}");
 
                               return Container(
                                 decoration: BoxDecoration(
@@ -98,15 +102,10 @@ class _UploadFragmentState extends State<UploadFragment> {
                                           borderRadius:
                                               BorderRadius.circular(8.0),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Image.file(
-                                              photoFile,
-                                              fit: BoxFit
-                                                  .cover, // 이미지를 뷰에 맞게 잘라서 채우기
-                                              width: double
-                                                  .maxFinite, // 가로는 부모 크기에 맞추기
-                                              height: 100, // 이미지 세로 크기 고정
-                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 18),
+                                            child: buildFileWidget(photoType,
+                                                file: photoFile),
                                           ),
                                         ),
                                         const SizedBox(height: 4),
@@ -189,7 +188,7 @@ class _UploadFragmentState extends State<UploadFragment> {
               child: ElevatedButton(
                 onPressed: () {
                   // 선택된 사진만 필터링
-                  final selectedPhotos = photoList
+                  final selectedPhotos = uploadList
                       .asMap()
                       .entries
                       .where((entry) => isCheckedList[entry.key])
@@ -200,7 +199,9 @@ class _UploadFragmentState extends State<UploadFragment> {
 
                   // PhotoProvider에 선택된 사진을 추가
                   Provider.of<PhotoProvider>(context, listen: false)
-                      .addPhotos(selectedPhotos);
+                      .addFileList(selectedPhotos);
+                  Provider.of<PhotoProvider>(context, listen: false)
+                      .clearFiles();
 
                   Navigator.pop(context);
                 },

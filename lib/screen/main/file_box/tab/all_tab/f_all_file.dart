@@ -1,8 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:kantan_mock_app/common/utility/upload_file_check.dart';
+import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/f_preview_screen.dart';
 import 'package:kantan_mock_app/screen/main/file_box/tab/all_tab/photo_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class AllFragment extends StatefulWidget {
   const AllFragment({super.key});
@@ -13,14 +16,12 @@ class AllFragment extends StatefulWidget {
 
 class _AllFragmentState extends State<AllFragment> {
   bool _isGridView = false; // 현재 뷰 상태를 저장 (리스트 뷰 또는 그리드 뷰)
-  List<XFile> _pickedImgs = [];
 
   @override
   Widget build(BuildContext context) {
-    final photoList = Provider.of<PhotoProvider>(context).photoList;
+    final fileList = Provider.of<PhotoProvider>(context).fileList;
 
     return SingleChildScrollView(
-      // 전체 화면 스크롤을 가능하게 함
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,96 +32,123 @@ class _AllFragmentState extends State<AllFragment> {
           ),
           sortBox(context),
           Padding(
-            padding: const EdgeInsets.all(
-                16.0), // Padding을 ListView와 GridView 외부에 적용
+            padding: const EdgeInsets.all(16.0),
             child: _isGridView
                 ? GridView.builder(
-                    shrinkWrap: true, // GridView 크기 자동 조정
-                    physics:
-                        const NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // 한 줄에 2개씩
+                      crossAxisCount: 2,
                       crossAxisSpacing: 12.0,
                       mainAxisSpacing: 12.0,
-                      childAspectRatio: 1.0, // 정사각형 비율
+                      childAspectRatio: 1.0,
                     ),
-                    itemCount: photoList.length,
+                    itemCount: fileList.length,
                     itemBuilder: (context, index) {
-                      final photo = photoList[index];
-                      final photoFile = photo.filePath;
-                      final photoName = photo.fileName;
-                      final photoDate = photo.date;
-                      final isFile = photo.isFile;
+                      final file = fileList[index];
+                      final filePath = file.filePath;
+                      final fileName = file.fileName;
+                      final fileDate = file.date;
+                      final isFile = file.isFile;
+                      print("filePath  : $filePath");
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.file(
-                                photoFile,
-                                fit: BoxFit.cover, // 이미지를 뷰에 맞게 잘라서 채우기
-                                width: double.maxFinite, // 가로는 부모 크기에 맞추기
-                                height: 130, // 이미지 세로 크기 고정
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PreviewScreen(
+                                filePath: filePath,
+                                fileName: fileName,
+                                fileDate: fileDate,
+                                fileType: isFile,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              photoName,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            Text(
-                              '${photoDate.year}-${photoDate.month}-${photoDate.day}', // 날짜 표시
-                              style: const TextStyle(
-                                  fontSize: 10, color: Colors.grey),
-                            ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child:
+                                      buildFileWidget(isFile, file: filePath),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                fileName,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                '${fileDate.year}-${fileDate.month}-${fileDate.day}',
+                                style: const TextStyle(
+                                    fontSize: 10, color: Colors.grey),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
                   )
                 : ListView.builder(
-                    shrinkWrap: true, // ListView 크기 자동 조정
-                    physics:
-                        const NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
-                    itemCount: photoList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: fileList.length,
                     itemBuilder: (context, index) {
-                      final photo = photoList[index];
-                      final photoName = photo.fileName;
-                      final photoDate = photo.date;
-                      final isFile = photo.isFile;
+                      final file = fileList[index];
+                      final filePath = file.filePath;
+                      final fileName = file.fileName;
+                      final fileDate = file.date;
+                      final isFile = file.isFile;
 
-                      return Row(
-                        children: [
-                          isFile
-                              ? const Icon(Icons.image)
-                              : const Icon(Icons.file_copy),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  photoName,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  '${photoDate.year}-${photoDate.month}-${photoDate.day}',
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                              ],
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PreviewScreen(
+                                filePath: filePath,
+                                fileName: fileName,
+                                fileDate: fileDate,
+                                fileType: isFile,
+                              ),
                             ),
-                          ),
-                          const Icon(Icons.more_horiz),
-                        ],
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            _getFileIcon(isFile),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    fileName,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '${fileDate.year}-${fileDate.month}-${fileDate.day}',
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.more_horiz),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -128,6 +156,20 @@ class _AllFragmentState extends State<AllFragment> {
         ],
       ),
     );
+  }
+
+  Widget _getFileIcon(String fileType) {
+    switch (fileType) {
+      case "jpg":
+      case "png":
+        return const Icon(Icons.image, color: Colors.blue);
+      case "pdf":
+        return const Icon(Icons.picture_as_pdf_sharp, color: Colors.red);
+      case "xlsx":
+        return const Icon(Icons.view_list, color: Colors.green);
+      default:
+        return const Icon(Icons.insert_drive_file, color: Colors.grey);
+    }
   }
 
   Widget sortBox(BuildContext context) {
@@ -144,18 +186,16 @@ class _AllFragmentState extends State<AllFragment> {
         IconButton(
           onPressed: () {
             setState(() {
-              _isGridView = false; // 리스트 뷰로 변경
+              _isGridView = false;
             });
-            print("Switched to ListView");
           },
           icon: const Icon(Icons.view_list),
         ),
         IconButton(
           onPressed: () {
             setState(() {
-              _isGridView = true; // 그리드 뷰로 변경
+              _isGridView = true;
             });
-            print("Switched to GridView");
           },
           icon: const Icon(Icons.grid_view),
         ),

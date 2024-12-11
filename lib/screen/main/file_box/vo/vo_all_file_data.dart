@@ -4,7 +4,7 @@ class AllFile {
   final File filePath; // 이미지 파일
   final String fileName; // 이미지 이름
   final DateTime date; // 이미지 날짜
-  final bool isFile;
+  final String isFile;
 
   AllFile({
     required this.filePath,
