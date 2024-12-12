@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kantan_mock_app/screen/main/file_box/vo/vo_all_file_data.dart'; // 날짜 및 시간 포맷을 위한 패키지
+import 'package:kantan_mock_app/screen/main/file_box/vo/vo_all_file_data.dart';
 
 class PhotoProvider with ChangeNotifier {
   List<AllFile> _fileList = [];
@@ -10,7 +10,7 @@ class PhotoProvider with ChangeNotifier {
   List<AllFile> _uploadList = [];
   List<AllFile> get uploadList => _uploadList;
 
-  // 업로드확인 화면으로 보내는 데이터
+  // アップロード確認画面に送るデータ
   void addFiles(List<File> files) {
     for (var file in files) {
       String fileName = file.path.split('/').last;
@@ -25,16 +25,16 @@ class PhotoProvider with ChangeNotifier {
       ));
     }
 
-    print('Photo List Count: ${_uploadList.length}'); // 리스트 상태 출력
-    notifyListeners(); // 상태 변화 알리기
+    print('Photo List Count: ${_uploadList.length}');
+    notifyListeners(); //リストが変更した時UIアップデート
   }
 
-  // 업로드 버튼 눌렀을때 파일박스 첫화면으로 보내는 데이터
+  // アップデートボタン押下した時メイン画面に送るデータ
   void addFileList(List<File> files) {
     for (var file in files) {
       String fileName = file.path.split('/').last;
       DateTime fileDate = file.lastModifiedSync();
-      // Photo 객체 생성 후 리스트에 추가
+
       _fileList.add(AllFile(
         filePath: file,
         fileName: fileName,
@@ -42,28 +42,28 @@ class PhotoProvider with ChangeNotifier {
         isFile: getExtension(fileName).toString(),
       ));
     }
-    print('Photo List Count: ${_fileList.length}'); // 리스트 상태 출력
-    notifyListeners(); // 상태 변화 알리기
+    print('Photo List Count: ${_fileList.length}');
+    notifyListeners();
   }
 
-  // // 하나의 이미지를 추가하는 메서드
+  // //一つの画像を保存する
   // void addPhoto(File file) {
   //   String fileName = _generateFileName();
-  //   DateTime fileDate = file.lastModifiedSync(); // 파일의 마지막 수정 시간을 날짜로 설정
+  //   DateTime fileDate = file.lastModifiedSync();
   //   _photoList.add(AllFile(
   //     filePath: file,
   //     fileName: fileName,
   //     date: fileDate,
   //     isFile: true,
   //   ));
-  //   notifyListeners(); // 리스트 변경 시 UI 업데이트
+  //   notifyListeners();
   // }
 
-  // 사진 한 장 수정하는 메서드
+  // 写真一枚アップデートする
   void updatePhoto(int index, File newFile) {
     AllFile updatedPhoto = _uploadList[index];
 
-    // 새로운 파일로 수정하기 (파일 경로와 이름 갱신)
+    // ファイルパスとファイル名修正
     String newFileName = newFile.path.split('/').last;
     DateTime newFileDate = newFile.lastModifiedSync();
 
@@ -75,25 +75,26 @@ class PhotoProvider with ChangeNotifier {
       isFile: getExtension(newFileName),
     );
 
-    notifyListeners(); // 리스트 변경 시 UI 업데이트
+    notifyListeners();
     print('Updated Photo at index $index');
   }
 
-  // 사진 리스트를 초기화하는 메서드 (필요시 사용)
+  // ファイルリストを初期化する
   void clearFiles() {
     _uploadList.clear();
-    print('_uploadList Count: ${_uploadList.length}'); // 리스트 상태 출력
-    notifyListeners(); // 리스트 초기화 시 UI 업데이트
+    print('_uploadList Count: ${_uploadList.length}');
+    notifyListeners();
   }
 
-  // 사진 이름을 현재 날짜와 시간으로 생성
+  // ファイル名を日時に変更
   String _generateFileName() {
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd_HHmmss');
-    return formatter.format(now); // 예: 20231127_153045
+    return formatter.format(now); // ex: 20231127_153045
   }
 
+  //拡張子
   String getExtension(String fileName) {
-    return fileName.split('.').last; // 마지막 요소가 확장자
+    return fileName.split('.').last;
   }
 }

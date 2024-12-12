@@ -26,10 +26,10 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: Color.fromARGB(244, 49, 49, 49),
         ),
       ),
-      centerTitle: true, // 제목을 가운데 정렬
-      backgroundColor: Colors.white, // 배경색 흰색
-      elevation: 0, // 그림자 없애기
-      iconTheme: const IconThemeData(color: Colors.black), // 아이콘 색상 변경
+      centerTitle: true,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      iconTheme: const IconThemeData(color: Colors.black),
       actions: [
         if (notificationIcon != null && onNotificationPressed != null)
           IconButton(
@@ -46,5 +46,5 @@ class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight); // AppBar 높이
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

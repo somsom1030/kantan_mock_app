@@ -17,7 +17,7 @@ class UploadFragment extends StatefulWidget {
 }
 
 class _UploadFragmentState extends State<UploadFragment> {
-  // ScrollController를 추가하여 스크롤 상태를 관리합니다.
+  // ScrollControllerを追加して
   final ScrollController _scrollController = ScrollController();
   late List<bool> isCheckedList;
 
@@ -26,7 +26,7 @@ class _UploadFragmentState extends State<UploadFragment> {
     super.initState();
     final uploadList =
         Provider.of<PhotoProvider>(context, listen: false).uploadList;
-    isCheckedList = List<bool>.filled(uploadList.length, false); // 초기화
+    isCheckedList = List<bool>.filled(uploadList.length, false); // リセット
   }
 
   @override
@@ -62,15 +62,15 @@ class _UploadFragmentState extends State<UploadFragment> {
               Expanded(
                 child: uploadList.isEmpty
                     ? const Center(
-                        child: Text('No photos available.')) // 비어 있을 때 메시지 표시
+                        child: Text('No photos available.')) // ファイルがない時
                     : Scrollbar(
-                        controller: _scrollController, // ScrollController 연결
-                        thumbVisibility: true, // 스크롤바 항상 표시
+                        controller: _scrollController, // ScrollController 連結
+                        thumbVisibility: true, // スクロールバー表示
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: GridView.builder(
                             controller:
-                                _scrollController, // GridView에 ScrollController 추가
+                                _scrollController, // GridViewに ScrollController 追加
                             shrinkWrap: true,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -120,7 +120,7 @@ class _UploadFragmentState extends State<UploadFragment> {
                                         ),
                                       ],
                                     ),
-                                    // 수정 아이콘 (오른쪽 아래)
+                                    // 修正アイコン
                                     Positioned(
                                       right: 0,
                                       bottom: 0,
@@ -128,24 +128,21 @@ class _UploadFragmentState extends State<UploadFragment> {
                                         icon: const Icon(Icons.edit,
                                             color: Colors.blue),
                                         onPressed: () async {
-                                          // 이미지 자르기 작업 수행
+                                          // トリミング作業
                                           CroppedFile? croppedFile =
                                               await ImageCropper().cropImage(
-                                            sourcePath:
-                                                photoFile.path, // 원본 이미지 경로
-                                            compressFormat: ImageCompressFormat
-                                                .jpg, // 압축 형식
-                                            compressQuality:
-                                                80, // 압축 품질 (0~100)
-                                            maxWidth: 1000, // 최대 가로 크기
-                                            maxHeight: 1000, // 최대 세로 크기
+                                            sourcePath: photoFile.path,
+                                            compressFormat:
+                                                ImageCompressFormat.jpg,
+                                            compressQuality: 80,
+                                            maxWidth: 1000,
+                                            maxHeight: 1000,
                                           );
 
-                                          // 자른 이미지가 있다면, 이를 업데이트하거나 사용
+                                          // トリミングされた画像があれば, それを使用する
                                           if (croppedFile != null) {
                                             print(
                                                 'Cropped Image Path: ${croppedFile.path}');
-                                            // 자른 이미지 경로를 사용하여 업데이트 작업을 진행합니다.
                                             File croppedFileAsFile =
                                                 File(croppedFile.path);
                                             Provider.of<PhotoProvider>(context,
@@ -179,7 +176,7 @@ class _UploadFragmentState extends State<UploadFragment> {
               ),
             ],
           ),
-          // 화면 하단 중앙에 고정된 버튼
+          // 画面の下中央に固定されたボタン
           Positioned(
             bottom: 20,
             left: 0,
@@ -187,7 +184,7 @@ class _UploadFragmentState extends State<UploadFragment> {
             child: Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // 선택된 사진만 필터링
+                  // 選択されたファイルだけ
                   final selectedPhotos = uploadList
                       .asMap()
                       .entries
@@ -197,7 +194,7 @@ class _UploadFragmentState extends State<UploadFragment> {
 
                   print('selectedPhotos: $selectedPhotos');
 
-                  // PhotoProvider에 선택된 사진을 추가
+                  // PhotoProviderに選択されたファイル追加
                   Provider.of<PhotoProvider>(context, listen: false)
                       .addFileList(selectedPhotos);
                   Provider.of<PhotoProvider>(context, listen: false)

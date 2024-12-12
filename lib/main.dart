@@ -11,9 +11,9 @@ void main() {
   // 상단 상태바 설정
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.white, // 상태바 배경 흰색
-      statusBarIconBrightness: Brightness.dark, // 아이콘 색상 검정
-      statusBarBrightness: Brightness.light, // iOS 상태바 대비 설정
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
     ),
   );
   runApp(
@@ -61,8 +61,8 @@ class _BottomNavExampleState extends State<BottomNavExample> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
-        statusBarColor: Colors.white, // 상태바 배경 흰색
-        statusBarIconBrightness: Brightness.dark, // 아이콘 색상 검정
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
       ),
       child: SafeArea(
         child: Scaffold(

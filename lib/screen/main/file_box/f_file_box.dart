@@ -22,7 +22,7 @@ class _FileBoxFragmentState extends State<FileBoxFragment>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this); // TabController 초기화
+    tabController = TabController(length: 3, vsync: this); // TabController リセット
   }
 
   @override
@@ -34,7 +34,7 @@ class _FileBoxFragmentState extends State<FileBoxFragment>
           const CustomAppBar(),
           tabBar,
           Expanded(
-            // 선택된 탭의 Fragment 표시
+            // 選択された Fragment 表示
             child: IndexedStack(
               index: currentIndex,
               children: const [
@@ -74,10 +74,10 @@ class _FileBoxFragmentState extends State<FileBoxFragment>
             },
             indicator: const UnderlineTabIndicator(
               borderSide: BorderSide(
-                width: 2.5, // 두께 설정
+                width: 2.5,
                 color: Color.fromARGB(255, 48, 162, 255),
               ),
-              insets: EdgeInsets.symmetric(horizontal: 60.0), // 폭 조정
+              insets: EdgeInsets.symmetric(horizontal: 60.0),
             ),
             labelStyle:
                 const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

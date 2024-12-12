@@ -33,14 +33,14 @@ class _MenuDrawerState extends State<MenuDrawer> {
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text("홈"),
+            title: Text("home"),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text("설정"),
+            title: Text("setting"),
             onTap: () {
               Navigator.pop(context);
             },
